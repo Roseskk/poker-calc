@@ -1,0 +1,80 @@
+@font-face {
+    font-family: "MonItalic";
+    src: url("./Montserrat-MediumItalic.woff2") format("woff2");
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.main__container {
+    padding: 0.5em;
+    margin: 0.5em;
+}
+.title {
+    font-family: 'MonItalic';
+    font-size: 20px;
+    text-align: center;
+}
+.poker__main {
+    display: flex;
+}
+.poker__labels {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+.poker__container {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.data__container {
+    display: flex;
+    align-items: center;
+}
+.data__label {
+    font-family: MonItalic;
+    width: 80px;
+    height: 20px;
+}
+.data__ev__button {
+    font-family: MonItalic;
+    font-size: 15px;
+
+    padding: 30px;
+
+    width: 100%;
+
+    text-align: center;
+    color: black;
+
+    transition: 0.5s ease-in-out;
+}
+.data__ev__button:hover {
+    background-color: black;
+    color: wheat;
+}
+
+input {
+    width: 300px;
+    height: 50px;
+
+    padding: 5px;
+    margin-bottom: 10px;
+
+    background-color: lightgray;
+
+    border-radius: 4px;
+    border: none;
+
+    font-size: 20px;
+}
+button {
+
+    border-radius: 8px;
+    border: 1px solid black;
+
+    cursor: pointer;
+}
