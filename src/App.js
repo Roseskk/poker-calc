@@ -59,25 +59,6 @@ class App extends React.Component{
                       this.setState({cardsArr: data.cards })
                   })
           })
-      // const _URL = `https://deckofcardsapi.com/api/deck/${this.state.deck}/draw/?count=52`
-      // fetch(_URL)
-      //     .then(response => response.json())
-      //     .then(data=>{
-      //         console.log(data)
-      //         this.setState({cardsAPI : data})
-      //     })
-      // console.log(this.state.cardsAPI)
-
-
-      // const imgUrl = 'https://deckofcardsapi.com/static/img/KH.png';
-      // fetch(imgUrl)
-      //     .then(response => response.blob())
-      //     .then(imageBlob => {
-      //         // Then create a local URL for that image and print it
-      //         const imageObjectURL = URL.createObjectURL(imageBlob);
-      //         console.log(imageObjectURL);
-      //         this.setState({imgt : imageObjectURL})
-      //     });
   }
 
     onBoardChange(event) {
