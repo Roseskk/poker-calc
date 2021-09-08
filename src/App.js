@@ -75,33 +75,31 @@ class App extends React.Component{
       this.setState({ board: event.target.value });
   }
   onOpenFirstHand() {
-      this.setState({activeFirstHand : true})
+      this.setState({activeFirstHand : true});
   }
   onOpenSecondHand() {
-      this.setState({activeSecondHand : true})
+      this.setState({activeSecondHand : true});
   }
   onFirstPlayerCardSelect(event) {
-      if(this.state.player1.includes('0')) {
-          this.setState({player1: this.state.player1.replace(/0/gi, 'T')})
-          console.log(this.state.player1)
+      if(event.target.title.includes('0') && this.state.player1.length < 4) {
+          this.setState({player1: this.state.player1 + event.target.title.replace(/0/gi, 'T')});
       } else {
 
-
           if (this.state.player1.length === 2) {
-              this.setState({activeFirstHand: false})
+              this.setState({activeFirstHand: false});
           }
           if (this.state.player1.length < 4) {
-              this.setState({player1: this.state.player1 + event.target.title})
-          } else this.setState({activeFirstHand: false})
+              this.setState({player1: this.state.player1 + event.target.title});
+          } else this.setState({activeFirstHand: false});
       }
   }
   onCardSecondPlayerSelect(event) {
       if ( this.state.player2.length === 2 ) {
-          this.setState({activeSecondHand : false})
+          this.setState({activeSecondHand : false});
       }
       if ( this.state.player2.length < 4 ) {
-          this.setState({player2: this.state.player2 + event.target.value})
-      } else this.setState({activeSecondHand : false})
+          this.setState({player2: this.state.player2 + event.target.value});
+      } else this.setState({activeSecondHand : false});
   }
   onTest(event) {
       console.log(event.target.title)
@@ -115,7 +113,7 @@ class App extends React.Component{
 
       console.log(`Player #1 - ${player1} - ${result.equities[0].getEquity()}%`);
       console.log(`Player #2 - ${player2} - ${result.equities[1].getEquity()}%`);
-      this.setState({player1ev: result.equities[0].getEquity() + '%', player2ev : result.equities[1].getEquity() + '%'})
+      this.setState({player1ev: result.equities[0].getEquity() + '%', player2ev : result.equities[1].getEquity() + '%'});
       console.log(result.equities[1].getTiePercentage());
   }
   render() {
