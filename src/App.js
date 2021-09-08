@@ -7,6 +7,15 @@ class App extends React.Component{
     super(props);
     this.state = {
         player1 : '', player2 : '', board : '', player1ev : '', player2ev : '',
+        firstPlayerCardImage : '',
+        secondCardPlayerFirstImage: '',
+        firstCardSecondPlayerImage:'',
+        secondCardSecondPlayerImage:'',
+        secondCardImage : '',
+        firstPlayerCardsSecondCard : false,
+        firstPlayerCards : false,
+        secondPlayerCards : false,
+        secondPlayerCardsSecondCard : false,
         cards:['As','Ac','Ah','Ad',
             'Ks','Kc','Kh','Kd',
             'Qs','Qc','Qh','Qd',
@@ -20,41 +29,100 @@ class App extends React.Component{
             '4s','4c','4h','4d',
             '3s','3c','3h','3d',
             '2s','2c','2h','2d',],
-        active: false
+        activeFirstHand : false,
+        activeSecondHand : false,
+        cardsAPI: '',
+        cardsArr:[],
+        deck:''
     };
-    this.onPlayer1 = this.onPlayer1.bind(this);
-    this.onPlayer2 = this.onPlayer2.bind(this);
     this.onBoardChange = this.onBoardChange.bind(this);
     this.evClick = this.evClick.bind(this);
-    this.onOpen = this.onOpen.bind(this);
-    this.selectPlayerFirstCard = this.selectPlayerFirstCard.bind(this);
-    this.selectPlayerSecondCard = this.selectPlayerSecondCard.bind(this);
-    this.selectSecondFirstCard = this.selectSecondFirstCard.bind(this);
-    this.selectSecondSecondCard = this.selectSecondSecondCard.bind(this);
+    this.onOpenFirstHand = this.onOpenFirstHand.bind(this);
+    this.onOpenSecondHand = this.onOpenSecondHand.bind(this);
+    this.onSecondPlayerCardSelect = this.onSecondPlayerCardSelect.bind(this);
+    this.onFirstPlayerCardSelect = this.onFirstPlayerCardSelect.bind(this);
+    this.onTest = this.onTest.bind(this);
   }
-  onPlayer1(event) {
-      this.setState({ player1: event.target.value });
+  componentDidMount() {
+      const _DECK = 'https://deckofcardsapi.com/api/deck/new/';
+      fetch( _DECK )
+          .then(response => response.json())
+          .then(data => {
+              this.setState({deck : data.deck_id})
+              const _URL = `https://deckofcardsapi.com/api/deck/${this.state.deck}/draw/?count=52`
+              fetch(_URL)
+                  .then(response => response.json())
+                  .then(data=>{
+                      console.log(data)
+                      this.setState({cardsAPI : data})
+                      console.log(data.cards)
+                      this.setState({cardsArr: data.cards })
+                  })
+          })
+      // const _URL = `https://deckofcardsapi.com/api/deck/${this.state.deck}/draw/?count=52`
+      // fetch(_URL)
+      //     .then(response => response.json())
+      //     .then(data=>{
+      //         console.log(data)
+      //         this.setState({cardsAPI : data})
+      //     })
+      // console.log(this.state.cardsAPI)
+
+
+      // const imgUrl = 'https://deckofcardsapi.com/static/img/KH.png';
+      // fetch(imgUrl)
+      //     .then(response => response.blob())
+      //     .then(imageBlob => {
+      //         // Then create a local URL for that image and print it
+      //         const imageObjectURL = URL.createObjectURL(imageBlob);
+      //         console.log(imageObjectURL);
+      //         this.setState({imgt : imageObjectURL})
+      //     });
   }
-  onPlayer2(event) {
-      this.setState({ player2: event.target.value });
-  }
-  onBoardChange(event) {
+
+    onBoardChange(event) {
       this.setState({ board: event.target.value });
   }
-  onOpen() {
-      this.setState({active : true})
+  onOpenFirstHand() {
+      this.setState({activeFirstHand : true});
   }
-  selectPlayerFirstCard(event) {
-      this.setState({player1 : event.target.value})
+  onOpenSecondHand() {
+      this.setState({activeSecondHand : true});
   }
-  selectPlayerSecondCard(event) {
-        this.setState({player1 : this.state.player1 + event.target.value})
+  onFirstPlayerCardSelect(event) {
+      if(event.target.title.includes('0') && this.state.player1.length < 4) {
+          this.setState({player1: this.state.player1 + event.target.title.replace(/0/gi, 'T')});
+      } else {
+          if(this.state.player1.length === 0) {
+             this.setState({firstPlayerCards : true, firstPlayerCardImage : event.target.src});
+          }
+          if (this.state.player1.length === 2) {
+              this.setState({activeFirstHand: false, firstPlayerCardsSecondCard : true, secondCardPlayerFirstImage : event.target.src  });
+          }
+          if (this.state.player1.length < 4) {
+              this.setState({player1: this.state.player1 + event.target.title});
+          } else this.setState({activeFirstHand: false});
+      }
+      this.setState({firstPlayerCards : true})
+      // this.setState({firstPlayerCardImage : event.target.src})
   }
-  selectSecondFirstCard(event) {
-        this.setState({player2 : event.target.value})
+  onSecondPlayerCardSelect(event) {
+      if(event.target.title.includes('0') && this.state.player2.length < 4) {
+          this.setState({player2: this.state.player2 + event.target.title.replace(/0/gi, 'T')});
+      } else {
+          if(this.state.player2.length === 0) {
+              this.setState({secondPlayerCards : true, firstCardSecondPlayerImage : event.target.src})
+          }
+          if (this.state.player2.length === 2) {
+              this.setState({activeSecondHand: false, secondPlayerCardsSecondCard : true, secondCardSecondPlayerImage : event.target.src});
+          }
+          if (this.state.player2.length < 4) {
+              this.setState({player2: this.state.player2 + event.target.title});
+          } else this.setState({activeSecondHand: false});
+      }
   }
-  selectSecondSecondCard(event) {
-        this.setState({player2 : this.state.player2 + event.target.value})
+  onTest(event) {
+      console.log(event.target.title)
   }
   evClick() {
       const player1 = CardGroup.fromString(this.state.player1);
@@ -65,76 +133,50 @@ class App extends React.Component{
 
       console.log(`Player #1 - ${player1} - ${result.equities[0].getEquity()}%`);
       console.log(`Player #2 - ${player2} - ${result.equities[1].getEquity()}%`);
-      this.setState({player1ev: result.equities[0].getEquity() + '%', player2ev : result.equities[1].getEquity() + '%'})
+      this.setState({player1ev: result.equities[0].getEquity() + '%', player2ev : result.equities[1].getEquity() + '%'});
       console.log(result.equities[1].getTiePercentage());
   }
   render() {
-      let selectClass = "cards__select";
-      selectClass += this.state.active ? "active" : "";
+      // let selectClass = "cards__select";
+      // selectClass += this.state.active ? " active" : "";
 
-      let selectPlayer1FirstCard = <select  onChange={this.selectPlayerFirstCard} className={selectClass}>
+      let selectPlayer1FirstCard = <div  className='cards__list'>
           {
-              this.state.cards.map(card=>{
+              this.state.cardsArr.map(api=>{
+                  return(
+                      <img className='cards__style'  onClick={this.onFirstPlayerCardSelect} title={api.code} key={api.code} src={api.image}/>
+                  )
+              })
+          }
+      </div>;
+      let selectPlayer2FirstCard = <div className='cards__list'>
+          {
+              this.state.cardsArr.map(api=>{
                       return(
                           <>
-                          <option value={card}>{card}</option>
+                              <img className='cards__style'  onClick={this.onSecondPlayerCardSelect} title={api.code} key={api.code} src={api.image}/>
                           </>
                       )
                   }
               )
           }
-      </select>;
-      let selectPlayer1SecondCard = <select  onChange={this.selectPlayerSecondCard}  className={selectClass}>
-          {
-              this.state.cards.map(card=>{
-                      return(
-                          <>
-                              <option value={card}>{card}</option>
-                          </>
-                      )
-                  }
-              )
-          }
-      </select>
-      let selectPlayer2FirstCard = <select onChange={this.selectSecondFirstCard} className={selectClass}>
-          {
-              this.state.cards.map(card=>{
-                      return(
-                          <>
-                              <option>{card}</option>
-                          </>
-                      )
-                  }
-              )
-          }
-      </select>;
-      let selectPlayer2SecondCard = <select onChange={this.selectSecondSecondCard}  className={selectClass}>
-          {
-              this.state.cards.map(card=>{
-                      return(
-                          <>
-                              <option>{card}</option>
-                          </>
-                      )
-                  }
-              )
-          }
-      </select>
+      </div>;
+
     return(
        <div className='main__container'>
          <p className='title'>Poker calc</p>
+           <div className='poker__wrapper'>
               <div className='poker__container'>
                   <div className='data__container'>
                       <label className='data__label'>Player 1</label>
                       <div className='data__mobile'>
                           <div className='cards__wrapper'>
-                              <a onClick={this.onOpen} className='cards' href='#'>
-                                  {this.state.player1}
-                              </a>
-                              { this.state.active ? selectPlayer1FirstCard : null }
-                              {this.state.active ? selectPlayer1SecondCard : null }
+                              <button onClick={this.onOpenFirstHand} className='cards' >
+                                  {/*{this.state.player1}*/}
+                                  {this.state.firstPlayerCards ? <img className='card__ico' src={this.state.firstPlayerCardImage} /> : 'Выберете карты'}
+                                  {this.state.firstPlayerCardsSecondCard ? <img className='card__ico' src={this.state.secondCardPlayerFirstImage} /> : null}
+                              </button>
                           </div>
-                          {/*<input type='text' onChange={this.onPlayer1} placeholder='Карты первого игрока'/>*/}
                           <label className='data__label ev'>{this.state.player1ev}</label>
                       </div>
                   </div>
@@ -142,13 +184,13 @@ class App extends React.Component{
                       <label className='data__label'>Player 2</label>
                       <div className='data__mobile'>
                           <div className='cards__wrapper'>
-                              <a onClick={this.onOpen} className='cards' href='#'>
-                                  {this.state.player2}
-                              </a>
-                              { this.state.active ? selectPlayer2FirstCard : null }
-                              {this.state.active ? selectPlayer2SecondCard : null }
+                              <button onClick={this.onOpenSecondHand} className='cards' >
+                                  <img />
+                                  {/*{ this.state.player2 }*/}
+                                  {this.state.secondPlayerCards ? <img className='card__ico' src={this.state.firstCardSecondPlayerImage} /> : 'Выберете карты'}
+                                  {this.state.secondPlayerCardsSecondCard ? <img className='card__ico' src={this.state.secondCardSecondPlayerImage} /> : null}
+                              </button>
                           </div>
-                          {/*<input type='text' onChange={this.onPlayer2} placeholder='Карты второго игрока'/>*/}
                           <label className='data__label ev'>{this.state.player2ev}</label>
                       </div>
                   </div>
@@ -159,8 +201,17 @@ class App extends React.Component{
                           <label className='data__label'></label>
                       </div>
                   </div>
-                  <button onClick={this.evClick} className='data__ev__button'>EV calc</button>
               </div>
+              <div>
+                  { this.state.activeFirstHand ? selectPlayer1FirstCard : null }
+              </div>
+              <div>
+                  { this.state.activeSecondHand ? selectPlayer2FirstCard : null }
+              </div>
+           </div>
+           <div className='button__ev'>
+                <button onClick={this.evClick} className='data__ev__button'>EV calc</button>
+           </div>
        </div>
     )
   }
