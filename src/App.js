@@ -9,9 +9,13 @@ class App extends React.Component{
         player1 : '', player2 : '', board : '', player1ev : '', player2ev : '',
         firstPlayerCardImage : '',
         secondCardPlayerFirstImage: '',
+        firstCardSecondPlayerImage:'',
+        secondCardSecondPlayerImage:'',
         secondCardImage : '',
         firstPlayerCardsSecondCard : false,
-        firstPlayerCards: false,
+        firstPlayerCards : false,
+        secondPlayerCards : false,
+        secondPlayerCardsSecondCard : false,
         cards:['As','Ac','Ah','Ad',
             'Ks','Kc','Kh','Kd',
             'Qs','Qc','Qh','Qd',
@@ -90,12 +94,8 @@ class App extends React.Component{
           this.setState({player1: this.state.player1 + event.target.title.replace(/0/gi, 'T')});
       } else {
           if(this.state.player1.length === 0) {
-             this.setState({firstPlayerCards : true})
-             this.setState({firstPlayerCardImage : event.target.src})
+             this.setState({firstPlayerCards : true, firstPlayerCardImage : event.target.src});
           }
-          // if(this.state.player1.length === 2) {
-          //     this.setState({secondPlayerCardImage : event.target.src})
-          // }
           if (this.state.player1.length === 2) {
               this.setState({activeFirstHand: false, firstPlayerCardsSecondCard : true, secondCardPlayerFirstImage : event.target.src  });
           }
@@ -110,9 +110,11 @@ class App extends React.Component{
       if(event.target.title.includes('0') && this.state.player2.length < 4) {
           this.setState({player2: this.state.player2 + event.target.title.replace(/0/gi, 'T')});
       } else {
-
+          if(this.state.player2.length === 0) {
+              this.setState({secondPlayerCards : true, firstCardSecondPlayerImage : event.target.src})
+          }
           if (this.state.player2.length === 2) {
-              this.setState({activeSecondHand: false});
+              this.setState({activeSecondHand: false, secondPlayerCardsSecondCard : true, secondCardSecondPlayerImage : event.target.src});
           }
           if (this.state.player2.length < 4) {
               this.setState({player2: this.state.player2 + event.target.title});
@@ -170,8 +172,8 @@ class App extends React.Component{
                       <div className='data__mobile'>
                           <div className='cards__wrapper'>
                               <button onClick={this.onOpenFirstHand} className='cards' >
-                                  {this.state.player1}
-                                  {this.state.firstPlayerCards ? <img className='card__ico' src={this.state.firstPlayerCardImage} /> : null}
+                                  {/*{this.state.player1}*/}
+                                  {this.state.firstPlayerCards ? <img className='card__ico' src={this.state.firstPlayerCardImage} /> : 'Выберете карты'}
                                   {this.state.firstPlayerCardsSecondCard ? <img className='card__ico' src={this.state.secondCardPlayerFirstImage} /> : null}
                               </button>
                           </div>
@@ -184,7 +186,9 @@ class App extends React.Component{
                           <div className='cards__wrapper'>
                               <button onClick={this.onOpenSecondHand} className='cards' >
                                   <img />
-                                  { this.state.player2 }
+                                  {/*{ this.state.player2 }*/}
+                                  {this.state.secondPlayerCards ? <img className='card__ico' src={this.state.firstCardSecondPlayerImage} /> : 'Выберете карты'}
+                                  {this.state.secondPlayerCardsSecondCard ? <img className='card__ico' src={this.state.secondCardSecondPlayerImage} /> : null}
                               </button>
                           </div>
                           <label className='data__label ev'>{this.state.player2ev}</label>
