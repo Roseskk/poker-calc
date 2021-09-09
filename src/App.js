@@ -7,11 +7,6 @@ class App extends React.Component{
     super(props);
     this.state = {
         player1 : '', player2 : '', board : '', player1ev : '', player2ev : '',
-        // firstPlayerCardImage : '',
-        // secondCardPlayerFirstImage: '',
-        // firstCardSecondPlayerImage:'',
-        // secondCardSecondPlayerImage:'',
-        // secondCardImage : '',
         firstPlayerCardsSelect : [],
         secondPlayerCardsSelect: [],
         boardCards:[],
@@ -20,19 +15,6 @@ class App extends React.Component{
         secondPlayerCards : false,
         secondPlayerCardsSecondCard : false,
         boardOpen : false,
-        cards : ['As','Ac','Ah','Ad',
-            'Ks','Kc','Kh','Kd',
-            'Qs','Qc','Qh','Qd',
-            'Js','Jc','Jh','Jd',
-            'Ts','Tc','Th','Td',
-            '9s','9c','9h','9d',
-            '8s','8c','8h','8d',
-            '7s','7c','7h','7d',
-            '6s','6c','6h','6d',
-            '5s','5c','5h','5d',
-            '4s','4c','4h','4d',
-            '3s','3c','3h','3d',
-            '2s','2c','2h','2d',],
         activeFirstHand : false,
         activeSecondHand : false,
         cardsAPI: '',
@@ -68,7 +50,6 @@ class App extends React.Component{
 
   onBoardChange(event) {
       this.setState({ boardOpen: true });
-
   }
   onOpenFirstHand() {
       this.setState({activeFirstHand : true});
@@ -83,49 +64,17 @@ class App extends React.Component{
     console.log(this.state.player1)
   }
   onSecondPlayerCardSelect(event) {
+    const regx = event.target.title.replace(/0/g,'T');
     this.state.secondPlayerCardsSelect.push({ title : event.target.title, src : event.target.src })
-    this.setState({ secondPlayerCardsSelect : this.state.secondPlayerCardsSelect, player2 : this.state.player2 + event.target.title  })
+    this.setState({ secondPlayerCardsSelect : this.state.secondPlayerCardsSelect, player2 : this.state.player2 + regx })
     console.log(this.state.player2)
   }
-  // onFirstPlayerCardSelect(event) {
-  //     if(event.target.title.includes('0') && this.state.player1.length < 4) {
-  //         this.setState({player1: this.state.player1 + event.target.title.replace(/0/gi, 'T'), firstPlayerCardImage:event.target.src});
-  //     } else {
-  //         console.log(event.target.src)
-  //         if(this.state.player1.length === 0) {
-  //            this.setState({firstPlayerCards : true, firstPlayerCardImage : event.target.src});
-  //         }
-  //         if (this.state.player1.length === 2) {
-  //             this.setState({activeFirstHand: false, firstPlayerCardsSecondCard : true, secondCardPlayerFirstImage : event.target.src  });
-  //         }
-  //         if (this.state.player1.length < 4) {
-  //             this.setState({player1: this.state.player1 + event.target.title});
-  //         } else this.setState({activeFirstHand: false});
-  //     }
-  //     this.setState({firstPlayerCards : true})
-  //     // this.setState({firstPlayerCardImage : event.target.src})
-  // }
-  // onSecondPlayerCardSelect(event) {
-  //     if(event.target.title.includes('0') && this.state.player2.length < 4) {
-  //         this.setState({player2:  event.target.title.replace(/0/gi, 'T'), firstCardSecondPlayerImage : event.target.src});
-  //         console.log(this.state.firstCardSecondPlayerImage)
-  //     } else {
-  //         if(this.state.player2.length === 0) {
-  //             this.setState({secondPlayerCards : true, firstCardSecondPlayerImage : event.target.src})
-  //         }
-  //         if (this.state.player2.length === 2) {
-  //             this.setState({activeSecondHand: false, secondPlayerCardsSecondCard : true, secondCardSecondPlayerImage : event.target.src});
-  //         }
-  //         if (this.state.player2.length < 4) {
-  //             this.setState({player2: this.state.player2 + event.target.title});
-  //         } else this.setState({activeSecondHand: false});
-  //     }
-  // }
+
   onBoardCards(event) {
+      const regx = event.target.title.replace(/0/g,'T');
       this.state.boardCards.push({title : event.target.title , src : event.target.src});
-      // this.setState({ boardCards :  {title : event.target.title, src : event.target.src }});
-      this.setState({boardCards : this.state.boardCards})
-      console.log(this.state.boardCards);
+      this.setState({boardCards : this.state.boardCards, board : this.state.board + regx })
+      console.log(this.state.board);
   }
   onTest(event) {
       console.log(event.target.title)
@@ -151,7 +100,7 @@ class App extends React.Component{
           {
               this.state.cardsArr.map((api,idx)=>{
                   return(
-                      <img onClick={this.onBoardCards} className='cards__style'   title={api.code} key={idx} src={api.image}/>
+                      <img onClick={this.onBoardCards} className='cards__style' alt={api.code}   title={api.code} key={idx} src={api.image}/>
                   )
               })
           }
@@ -161,7 +110,7 @@ class App extends React.Component{
           {
               this.state.cardsArr.map((api,idx)=>{
                   return(
-                      <img className='cards__style'  onClick={this.onFirstPlayerCardSelect}  title={api.code} key={idx} src={api.image}/>
+                      <img className='cards__style'  onClick={this.onFirstPlayerCardSelect} alt={api.code}  title={api.code} key={idx} src={api.image}/>
                   )
               })
           }
@@ -170,7 +119,7 @@ class App extends React.Component{
           {
               this.state.cardsArr.map((api,idx)=>{
                       return(
-                          <img className='cards__style'  onClick={this.onSecondPlayerCardSelect}   title={api.code} key={idx} src={api.image}/>
+                          <img className='cards__style'  onClick={this.onSecondPlayerCardSelect}  alt={api.code} title={api.code} key={idx} src={api.image}/>
                       )
                   }
               )
@@ -190,7 +139,7 @@ class App extends React.Component{
                                   {
                                       this.state.firstPlayerCardsSelect.map((cards,idx)=>{
                                           return(
-                                              <img className='card__ico' title={cards.title} key={idx} src={cards.src} />
+                                              <img className='card__ico' title={cards.title} alt={cards.title} key={idx} src={cards.src} />
                                           )
                                       })
                                   }
@@ -205,12 +154,9 @@ class App extends React.Component{
                           <div className='cards__wrapper'>
                               <button onClick={this.onOpenSecondHand} className='cards' >
                                   {
-                                      this.state.secondPlayerCardsSelect.map(cards=>{
+                                      this.state.secondPlayerCardsSelect.map((cards,idx)=>{
                                           return(
-                                              <>
-                                                  {cards.title}
-                                                  <img className='card__ico' title={cards.title} src={cards.src} />
-                                              </>
+                                              <img className='card__ico' key={idx} title={cards.title} alt={cards.title} src={cards.src} />
                                           )
                                       })
                                   }
@@ -226,7 +172,7 @@ class App extends React.Component{
                               {
                                   this.state.boardCards.map((cards,idx)=>{
                                       return(
-                                          <img key={idx}  className='card__ico' title={cards.title}  src={cards.src} />
+                                          <img key={idx}  className='card__ico' title={cards.title} alt={cards.title}  src={cards.src} />
                                       )
                                   })
                               }
