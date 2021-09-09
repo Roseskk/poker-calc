@@ -59,21 +59,23 @@ class App extends React.Component{
   }
   onFirstPlayerCardSelect(event) {
     const regx = event.target.title.replace(/0/g,'T');
-    this.state.firstPlayerCardsSelect.push({ title : regx, src : event.target.src })
-    this.setState({ firstPlayerCardsSelect : this.state.firstPlayerCardsSelect, player1 : this.state.player1 + regx  })
-    console.log(this.state.player1)
+    // if( this.state.firstPlayerCardsSelect.length < 2 ) {
+        this.state.firstPlayerCardsSelect.push({ title : regx, src : event.target.src });
+        this.setState({ firstPlayerCardsSelect : this.state.firstPlayerCardsSelect, player1 : this.state.player1 + regx  });
+        console.log(this.state.player1);
+    // } else this.setState({ activeFirstHand : false });
   }
   onSecondPlayerCardSelect(event) {
     const regx = event.target.title.replace(/0/g,'T');
-    this.state.secondPlayerCardsSelect.push({ title : event.target.title, src : event.target.src })
-    this.setState({ secondPlayerCardsSelect : this.state.secondPlayerCardsSelect, player2 : this.state.player2 + regx })
-    console.log(this.state.player2)
+    this.state.secondPlayerCardsSelect.push({ title : event.target.title, src : event.target.src });
+    this.setState({ secondPlayerCardsSelect : this.state.secondPlayerCardsSelect, player2 : this.state.player2 + regx });
+    console.log(this.state.player2);
   }
 
   onBoardCards(event) {
       const regx = event.target.title.replace(/0/g,'T');
       this.state.boardCards.push({title : event.target.title , src : event.target.src});
-      this.setState({boardCards : this.state.boardCards, board : this.state.board + regx })
+      this.setState({boardCards : this.state.boardCards, board : this.state.board + regx });
       console.log(this.state.board);
   }
   onTest(event) {
@@ -182,13 +184,18 @@ class App extends React.Component{
                   </div>
               </div>
               <div>
-                  { this.state.activeFirstHand ? selectPlayer1FirstCard : null }
+                  {
+                      // this.state.firstPlayerCardsSelect.length === 2 && this.state.activeFirstHand === true ? selectPlayer1FirstCard : null
+                  }
+                  {
+                      this.state.activeFirstHand && this.state.player1.length <=2 ? selectPlayer1FirstCard : null
+                  }
               </div>
               <div>
-                  { this.state.activeSecondHand ? selectPlayer2FirstCard : null }
+                  { this.state.activeSecondHand && this.state.player2.length <= 2 ? selectPlayer2FirstCard : null }
               </div>
                <div>
-                   { this.state.boardOpen ? board : null }
+                   { this.state.boardOpen && this.state.board.length <= 9 ? board : null }
                </div>
            </div>
            <div className='button__ev'>
